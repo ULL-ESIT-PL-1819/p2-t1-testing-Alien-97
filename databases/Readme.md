@@ -168,4 +168,4 @@ Ejecutamos:
 	node rdf-to-bulk.js ../data/cache/epub/ | head
 
 
-![ini](capturas/'Ejecución rdf-to-bulk.png'.png)
+![ini](capturas/'Ejecución rdf-to-bulk'.png)
