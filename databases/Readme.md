@@ -63,4 +63,59 @@ El directorio databases contiene todos los programas y ficheros con código que 
 
 El directorio data contiene los ficheros de datos fuente, todos los libros del proyecto Gutemberg en formate RDF.
 
-Dentro del directorio databases creamos el directorio test, 
+Dentro del directorio databases crearemos dos directorios, uno que se llama test, y que contendrá el fichero *parse-rdf-test.js*, donde implementaremos las pruebas con Mocha. El otro directorio es lib, que contendrá el fichero *parse-rdf*, donde agregaremos los módulos y librerías de xml,  como rdf, para indicarle a cheerio dónde tiene que buscar el código para comprobar si las pruebas funcionan.
+
+Encontrándome en la página 19, este es el código desarrollado en ambos ficheros:
+
+El parse-rdf-test.js
+
+	'use strict';
+
+	const parseRDF = require('../lib/parse-rdf.js');
+	const fs = require('fs');
+	const expect = require('chai').expect;
+
+	const rdf = fs.readFileSync(`${__dirname}/pg132.rdf`);
+
+	describe('parseRDF',() => {
+	        it('should be a function',() => {
+	                expect(parseRDF).to.be.a('function');
+	        });
+
+	        it('should parse RDF content',() => {
+	                const book = parseRDF(rdf);
+	                expect(book).to.be.an('object');
+	                expect(book).to.have.a.property('id',132);
+	                expect(book).to.have.a.property('title','The Art of War');
+	                expect(book).to.have.a.property('authors').that.is.an('array').with.lengthOf(2).and.contains('Sunzi, active 6th century B.C.').and.contains('Giles, Lionel');
+	                expect(book).to.have.a.property('subjects').that.is.an('array').with.lengthOf(2).and.contains('Military art and science -- Early works to 1800').and.contains('War -- Early works to 1800');
+
+
+
+
+
+	        });
+	});
+
+
+En este código las apruebas abarcan  cuatro campos que queremos obtener del libro pg132.rdf , que lo que devuelve la función parseRDF sea un objeto, el id,título, autores, y descripción o temas del libro. En la implementación de cada prueba esta falla, luego se corrige, se vuelve a ejecutar y funciona, siguiendo la metodología BDD.
+
+Este es el fichero parse-rdf.js:
+
+'use strict';
+
+const cheerio = require('cheerio');
+
+	module.exports = rdf => {
+
+	        const $ = cheerio.load(rdf);
+	        const book = {};
+
+	        book.id = +$('pgterms\\:ebook').attr('rdf:about').replace('ebooks/','');
+	        book.title = $('dcterms\\:title').text();
+	        book.authors = $('pgterms\\:agent pgterms\\:name').toArray().map(elem => $(elem).text());
+	        book.subjects = $('[rdf\\:resource$="/LCSH"]').parent().find('rdf\\:value').toArray().map(elem => $(elem).text());
+	        return book;
+	};
+
+Aquí se observa que primero se implementa el código para que la función parseRDF devuelva un objeto (book), se usa el método load de cheerio para parsear el contenido del fichero que estamos analizando, el pg132, 
