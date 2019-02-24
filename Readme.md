@@ -1,5 +1,8 @@
 ## TUTORIAL SOBRE LO QUE HE APRENDIDO EN ESTA PRÁCTICA 
 
+[![Build Status](https://travis-ci.org/ULL-ESIT-PL-1819/p2-t1-testing-Alien-97.svg?branch=master)](https://travis-ci.org/ULL-ESIT-PL-1819/p2-t1-testing-Alien-97)
+
+
 En esta práctica se ha aprendido a parsear un documento en RDF, un formato de XML, y convertirlo a JSON, un lenguaje de texto que permite visulizar la información de una forma mucho más jerárquica y estructurada que en XML. La herramienta que se ha usado para esta tarea es NODE.js, un framework de Javascript.
 
 Se ha usado la versión de JSON conocidad Limited JSON, una versión que enfatiza mucho más la jerarquía en los datos. 
@@ -13,7 +16,13 @@ En el proceso para obtener los datos en JSON, se ha aplicado el Behavioral Drive
 		-Finalmente verificar que la implementación de la unidad haga exitosas las pruebas
 
 
-Para aplicar el BDD, se han utilizado programas como Mocha y Chai.
+Para aplicar el BDD, se han utilizado programas como Mocha y Chai, Mocha es un framework que permite desarrollar las pruebas, provee expresiones como describe, el it, context,beforeEach.
+
+La librería chai es la que se encarga de ca
+
+
+
+En el fichero *package-json* configuramos un script para automatizar una serie de tareas como el testing con Mocha y Chai 
 
 Se ha hecho uso de la herramienta gulp, para automatizar tareas, como la descarga del fichero fuente en RDF (del proyecto Gutemberg) que posteriormente se iba a parsear, para instalarlo se aplicó el comando:
 
@@ -169,3 +178,4 @@ Ejecutamos:
 
 
 ![ini](capturas/Ejecución_rdf-to-bulk.png)
+
