@@ -1,2 +1,4 @@
-/data
-/database/node_modules
+
+/data/*
+/database/node_modules/*
+/database/*.pdf
