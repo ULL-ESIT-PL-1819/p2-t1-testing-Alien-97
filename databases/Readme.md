@@ -118,4 +118,54 @@ const cheerio = require('cheerio');
 	        return book;
 	};
 
-Aquí se observa que primero se implementa el código para que la función parseRDF devuelva un objeto (book), se usa el método load de cheerio para parsear el contenido del fichero que estamos analizando, el pg132, 
+Aquí se observa que se implementa el código para que la función parseRDF devuelva un objeto (book), se usa el método *load* de cheerio para parsear el contenido del fichero que estamos analizando, el pg132. 
+
+Para cada uno de los campos  del libro que son de interés, se especifica la etiqueta para extraer su información.
+
+Creamos otro fichero *rdf-to-json.js* para analizar otro libro de la base de datos Guttemberg:
+
+	const fs = require('fs');
+	const parseRDF = require('./lib/parse-rdf.js');
+	const rdf=fs.readFileSync(process.argv[2]);
+	const book =parseRDF(rdf);
+	console.log(JSON.stringify(book,null,''));
+
+Automatizamos el proceso de convertir de RDF A JSON, para evitar que se demore la ejecución, aplicamos el opción HEAD para imprimir solo las primeras diez líneas, 10 libros.
+
+
+
+Primero instalamos node-dir, que facilitará esta tarea con:
+
+	npm install --save --save-exact node-dir@0.1.16
+
+
+Definimos el fichero rdf-to-bulk.js
+
+	'use strict';
+
+	const dir = require('node-dir');
+	const parseRDF = require('./lib/parse-rdf.js');
+
+	const dirname = process.argv[2];
+
+	const options = {
+	        match: /\.rdf$/,// Match file names that in '.rdf'.
+	        exclude:['pg0.rdf'],
+	};
+
+	dir.readFiles(dirname,options,(err,content,next) => {
+	        if(err) throw err;
+	        const doc = parseRDF(content);
+	        console.log(JSON.stringify( {index:{_id: `pg${doc.id}` } }));
+	        console.log(JSON.stringify(doc));
+	        next();
+	});
+
+
+
+Ejecutamos:
+
+	node rdf-to-bulk.js ../data/cache/epub/ | head
+
+
+![ini](capturas/'Ejecución rdf-to-bulk.png'.png)
