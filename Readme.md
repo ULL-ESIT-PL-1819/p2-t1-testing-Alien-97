@@ -18,12 +18,18 @@ En el proceso para obtener los datos en JSON, se ha aplicado el Behavioral Drive
 
 Para aplicar el BDD, se han utilizado programas como Mocha y Chai, Mocha es un framework que permite desarrollar las pruebas, provee expresiones como describe, el it, context,beforeEach.
 
-La librería chai es la que se encarga de ca
+La librería chai es la que se encarga de comprobar la validez de las pruebas, lo que se conoce como la aserción, el expect,equal, exist, pertencen a chai:
 
 
+En el fichero *package-json* configuramos un script para automatizar una serie de tareas como el testing con Mocha y chai:
 
-En el fichero *package-json* configuramos un script para automatizar una serie de tareas como el testing con Mocha y Chai 
+	"scripts": {
+	    "test":"mocha",
+	    "test:watch":"mocha --watch --reporter min",
+	    "test:debug": "node --inspect node_modules/mocha/bin/_mocha --watch --no-timeouts"
+	  },
 
+  
 Se ha hecho uso de la herramienta gulp, para automatizar tareas, como la descarga del fichero fuente en RDF (del proyecto Gutemberg) que posteriormente se iba a parsear, para instalarlo se aplicó el comando:
 
 	npm install gulp@3.9.1
